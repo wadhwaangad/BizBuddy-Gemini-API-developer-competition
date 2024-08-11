@@ -1,1 +1,2 @@
 # BizBuddy-Gemini-API-developer-competition
+This is my submission to the Gemini API Developer Competition. BizBuddy is an AI-powered business management web application that helps small business owners manage their finances, assign tasks to employees, and recieve personalized AI-powered advice on how to grow their business. The app is completely functional but not deployable at this stage. Look through the repository for the code and a demo video. 
