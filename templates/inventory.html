@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: 'San Francisco', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(to right, #0072ff, #00c6ff);
+            color: white;
+            height: 100vh;
+        }
+        h1 {
+            margin: 20px 0;
+            font-size: 2.5rem;
+        }
+        form {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            width: 80%;
+            max-width: 1000px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        tr:nth-child(odd) {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: linear-gradient(to right, #2575fc, #6a11cb);
+        }
+        button[type="button"] {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        button[type="button"]:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .back-button {
+            background-color: #ffffff;
+            color: #007BFF;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
+            margin-top: 10px;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+        .back-button:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Inventory</h1>
+    <form method="POST" action="{{ url_for('inventory') }}">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="inventoryTableBody">
+                {% for item in inventory %}
+                <tr>
+                    <td><input type="text" name="id" value="{{ item.id }}"></td>
+                    <td><input type="text" name="name" value="{{ item.name }}"></td>
+                    <td><input type="number" name="quantity" value="{{ item.quantity }}"></td>
+                    <td><input type="number" name="price" value="{{ item.price }}"></td>
+                    <td><input type="text" name="description" value="{{ item.description }}"></td>
+                    <td><button type="button" onclick="removeItem(this)">Remove</button></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button type="button" onclick="addItem()">Add Item</button>
+        <input type="hidden" name="inventory_data" id="inventoryData">
+        <button type="submit">Save</button>
+    </form>
+    <!-- Add Back to Dashboard button -->
+    <button id="backButton" class="back-button">← Back to Dashboard</button>
+
+    <script>
+        function addItem() {
+            const tableBody = document.getElementById('inventoryTableBody');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td><input type="text" name="id" value=""></td>
+                <td><input type="text" name="name" value=""></td>
+                <td><input type="number" name="quantity" value=""></td>
+                <td><input type="number" name="price" value=""></td>
+                <td><input type="text" name="description" value=""></td>
+                <td><button type="button" onclick="removeItem(this)">Remove</button></td>
+            `;
+            tableBody.appendChild(row);
+        }
+
+        function removeItem(button) {
+            const row = button.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+        }
+
+        document.querySelector('form').addEventListener('submit', function (e) {
+            const tableBody = document.getElementById('inventoryTableBody');
+            const rows = tableBody.querySelectorAll('tr');
+            const inventoryData = [];
+
+            rows.forEach(row => {
+                const id = row.querySelector('input[name="id"]').value;
+                const name = row.querySelector('input[name="name"]').value;
+                const quantity = row.querySelector('input[name="quantity"]').value;
+                const price = row.querySelector('input[name="price"]').value;
+                const description = row.querySelector('input[name="description"]').value;
+
+                inventoryData.push({ id, name, quantity, price, description });
+            });
+
+            document.getElementById('inventoryData').value = JSON.stringify(inventoryData);
+        });
+
+        // Back to Dashboard button functionality
+        document.getElementById('backButton').addEventListener('click', function () {
+            window.location.href = '/dashboard'; // Replace with the correct route for your dashboard
+        });
+    </script>
+</body>
+</html>
+

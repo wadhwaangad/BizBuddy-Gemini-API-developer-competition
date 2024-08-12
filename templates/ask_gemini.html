@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ask Gemini</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .chat-container {
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            height: 90vh;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background-color: #007BFF;
+            color: #ffffff;
+            padding: 20px;
+            font-size: 24px;
+            font-weight: 600;
+            text-align: center;
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #f4f7f6;
+            display: flex;
+            flex-direction: column; /* Ensure vertical stacking */
+        }
+
+        .message {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            line-height: 1.4;
+            max-width: 75%; /* Control the width of each message */
+            word-wrap: break-word; /* Ensure long words wrap properly */
+        }
+
+        .message.user {
+            background-color: #007BFF;
+            color: white;
+            align-self: flex-end; /* Align user messages to the right */
+            border-bottom-right-radius: 0;
+        }
+
+        .message.bot {
+            background-color: #e0e0e0;
+            color: #333;
+            align-self: flex-start; /* Align bot messages to the left */
+            border-bottom-left-radius: 0;
+        }
+
+        .chat-input-container {
+            display: flex;
+            border-top: 1px solid #eeeeee;
+            background-color: #fff;
+            padding: 10px;
+            flex-direction: column;
+        }
+
+        .chat-input, .chat-file-input {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            border-radius: 8px;
+            background-color: #f1f3f4;
+            margin-bottom: 10px;
+        }
+
+        .chat-button {
+            background-color: #007BFF;
+            color: #ffffff;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .chat-button:hover {
+            background-color: #0056b3;
+        }
+        
+        .back-button {
+    background-color: #ffffff;
+    color: #007BFF;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 16px;
+    margin-top: 10px;
+    text-align: center;
+    transition: background-color 0.3s;
+     }
+
+        .back-button:hover {
+    background-color: #e0e0e0;
+     }
+
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">Ask Gemini</div>
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="chat-input-container">
+            <input type="text" id="chatInput" class="chat-input" placeholder="Type your message...">
+            <input type="file" id="chatFileInput" class="chat-file-input" accept="image/*">
+            <button id="chatButton" class="chat-button">Send</button>
+            <button id="backButton" class="back-button">← Back to Dashboard</button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('chatButton').addEventListener('click', async function () {
+            const inputField = document.getElementById('chatInput');
+            const fileInputField = document.getElementById('chatFileInput');
+            const messageText = inputField.value;
+            const file = fileInputField.files[0];
+
+            if (messageText.trim() !== '' || file) {
+                const formData = new FormData();
+                formData.append('prompt', messageText);
+
+                if (file) {
+                    formData.append('image', file);
+                }
+
+                const chatMessages = document.getElementById('chatMessages');
+
+                // Add user message to chat
+                if (messageText.trim() !== '') {
+                    const userMessage = document.createElement('div');
+                    userMessage.className = 'message user';
+                    userMessage.textContent = messageText;
+                    chatMessages.appendChild(userMessage);
+                }
+
+                inputField.value = '';
+                fileInputField.value = '';
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                try {
+                    const response = await fetch('/ask_gemini', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const data = await response.json();
+                    const botMessage = document.createElement('div');
+                    botMessage.className = 'message bot';
+
+                    if (data.response) {
+                        // Insert the response as HTML
+                        botMessage.innerHTML = data.response;
+                    } else {
+                        botMessage.textContent = `Error: ${data.error}`;
+                    }
+
+                    chatMessages.appendChild(botMessage);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                } catch (error) {
+                    const errorMessage = document.createElement('div');
+                    errorMessage.className = 'message bot';
+                    errorMessage.textContent = `Error: ${error.message}`;
+                    chatMessages.appendChild(errorMessage);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }
+            }
+        });
+        
+        document.getElementById('backButton').addEventListener('click', function () {
+    window.location.href = '/dashboard'; // Change this to the correct route for your dashboard
+    });
+
+
+        // Allow pressing Enter to send a message
+        document.getElementById('chatInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                document.getElementById('chatButton').click();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Results</title>
+    <style>
+        body {
+            font-family: 'San Francisco', sans-serif;
+            background: linear-gradient(to right, #0072ff, #00c6ff);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: auto;
+            max-height: 90vh;
+            width: 90%;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        .description p, .summary p {
+            font-size: 1.2em;
+            margin: 20px 0;
+            white-space: pre-wrap; /* Preserves whitespace and line breaks */
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .description, .summary {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .back-button {
+            background-color: #ffffff;
+            color: #007BFF;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+            display: inline-block;
+        }
+        .back-button:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Analysis Results</h1>
+        <div class="description">
+            <strong>Description:</strong>
+            <p>{{ description | safe }}</p>
+        </div>
+        {% if image_url %}
+            <img src="{{ image_url }}" alt="DataFrame Image">
+        {% endif %}
+        <div class="summary">
+            <strong>Summary:</strong>
+            <p>{{ summary | safe }}</p>
+        </div>
+        <button id="backButton" class="back-button">← Back to Dashboard</button>
+    </div>
+    <script>
+        document.getElementById('backButton').addEventListener('click', function () {
+            window.location.href = '/dashboard'; // Replace with the correct route for your dashboard
+        });
+    </script>
+</body>
+</html>
+
+

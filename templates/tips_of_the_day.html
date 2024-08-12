@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tips of the Day</title>
+    <style>
+        @font-face {
+            font-family: 'San Francisco';
+            src: url('https://cdn.jsdelivr.net/gh/AppleDesignResources/SanFranciscoFont@1.0/SF-Pro-Display-Medium.otf') format('opentype');
+        }
+        body {
+            font-family: 'San Francisco', sans-serif;
+            background: linear-gradient(to right, #0072ff, #00c6ff);
+            color: white;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow-y: auto; /* Allows vertical scrolling for the whole page */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        #tips-container {
+            max-width: 90vw;
+            max-height: 70vh; /* Adjusted height to make room for the button */
+            padding: 20px;
+            overflow-y: auto; /* Added scroll for tips if they exceed the height */
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin: 10px 0;
+        }
+        .btn {
+            background-color: white;
+            color: #0072ff;
+            border: none;
+            border-radius: 5px;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #0072ff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div id="tips-container">
+        <h1>Tips of the Day</h1>
+        <!-- Tips will be injected here by JavaScript -->
+    </div>
+
+    <a href="{{ url_for('dashboard') }}">
+        <button class="btn">Back to Dashboard</button>
+    </a>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const tips = {{ tips | tojson }};
+            const tipsContainer = document.getElementById('tips-container');
+            
+            tips.forEach(tip => {
+                const p = document.createElement('p');
+                p.innerHTML = tip;
+                tipsContainer.appendChild(p);
+            });
+        });
+    </script>
+</body>
+</html>
+
+

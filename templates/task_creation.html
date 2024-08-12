@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Task</title>
+    <style>
+        body {
+            font-family: 'San Francisco', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(to right, #00c6ff, #0072ff);
+            color: white;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+        h1, h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: normal;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        input, textarea, select {
+            width: 100%;
+            margin: 10px 0;
+            padding: 15px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            box-sizing: border-box;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        input::placeholder, textarea::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        textarea {
+            height: 100px;
+            resize: none;
+        }
+        .btn {
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+            background-color: white;
+            color: #0072ff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #0072ff;
+            color: white;
+        }
+        .back-btn {
+            background-color: #f44336;
+            color: white;
+            margin-top: 20px;
+        }
+        .back-btn:hover {
+            background-color: #d32f2f;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+        li {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        p {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Create Task</h1>
+        <form method="POST">
+            <label for="title">Task Title</label>
+            <input type="text" id="title" name="title" placeholder="Task Title" required value="{{ task_details.title if task_details else '' }}">
+            
+            <label for="description">Task Description</label>
+            <textarea id="description" name="description" placeholder="Task Description" required>{{ task_details.description if task_details else '' }}</textarea>
+            
+            <label for="due_date">Due Date</label>
+            <input type="date" id="due_date" name="due_date" required value="{{ task_details.due_date if task_details else '' }}">
+            
+            {% if suggested_employee %}
+                <p>Suggested Employee: {{ suggested_employee | safe }}</p>
+                <label for="assigned_to">Assign to</label>
+                <select id="assigned_to" name="assigned_to" required>
+                    {% for employee in employees %}
+                        <option value="{{ employee.name }}">{{ employee.name }} - {{ employee.role }}</option>
+                    {% endfor %}
+                </select>
+                <button class="btn" type="submit" name="select_employee">Assign Task</button>
+            {% else %}
+                <button class="btn" type="submit">Find Best Employee</button>
+            {% endif %}
+        </form>
+        <h2>Current Tasks</h2>
+        <ul>
+            {% for task in tasks %}
+                <li>{{ task.title }} - Assigned to: {{ task.assigned_to }}</li>
+            {% endfor %}
+        </ul>
+        <a href="{{ url_for('dashboard') }}">
+            <button class="btn back-btn">Back to Dashboard</button>
+        </a>
+    </div>
+</body>
+</html>

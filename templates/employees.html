@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employees</title>
+    <style>
+        body {
+            font-family: 'San Francisco', sans-serif;
+            background: linear-gradient(to right, #00c6ff, #0072ff);
+            color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+        h1, h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: normal;
+        }
+        input, textarea {
+            width: 100%;
+            margin: 10px 0;
+            padding: 15px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        input {
+            height: 45px;
+        }
+        textarea {
+            height: 100px;
+            resize: none;
+        }
+        .btn {
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+            background-color: white;
+            color: #0072ff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #0072ff;
+            color: white;
+        }
+        .back-btn {
+            background-color: #f44336;
+            color: white;
+            margin-top: 20px;
+        }
+        .back-btn:hover {
+            background-color: #d32f2f;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+        li {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Employees</h1>
+        <form method="POST">
+            <input type="text" name="name" placeholder="Name" required>
+            <input type="text" name="role" placeholder="Role" required>
+            <textarea name="strengths" placeholder="Strengths" required></textarea>
+            <textarea name="skills" placeholder="Skills" required></textarea>
+            <button class="btn" type="submit">Add Employee</button>
+        </form>
+        <h2>Current Employees</h2>
+        <ul>
+            {% for employee in employees %}
+                <li>{{ employee.name }} - {{ employee.role }}</li>
+            {% endfor %}
+        </ul>
+        <a href="{{ url_for('dashboard') }}">
+            <button class="btn back-btn">Back to Dashboard</button>
+        </a>
+    </div>
+</body>
+</html>
+

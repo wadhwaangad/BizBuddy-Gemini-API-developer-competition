@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: 'San Francisco', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            font-size: 24px;
+            text-align: center;
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            margin-bottom: 16px;
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .checkbox-group label {
+            font-weight: normal;
+            margin-bottom: 4px;
+        }
+        .checkbox-group input {
+            margin-right: 8px;
+        }
+        .kpi-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 16px;
+        }
+        .kpi-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .kpi-item input[type="checkbox"] {
+            margin-right: 8px;
+        }
+        .kpi-item input[type="number"] {
+            margin-left: auto;
+            width: 80px;
+            padding: 4px;
+        }
+        button {
+            padding: 10px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Edit Your Profile</h1>
+        <form method="POST" action="{{ url_for('profile') }}">
+            <label for="company">Company Name</label>
+            <input type="text" id="company" name="company" value="{{ profile.company }}" required>
+
+            <label for="company_age">Company Age</label>
+            <select id="company_age" name="company_age" required>
+                <option value="" disabled>Select age range</option>
+                <option value="1-3 years" {% if profile.company_age == '1-3 years' %}selected{% endif %}>1-3 years</option>
+                <option value="4-7 years" {% if profile.company_age == '4-7 years' %}selected{% endif %}>4-7 years</option>
+                <option value="8-10 years" {% if profile.company_age == '8-10 years' %}selected{% endif %}>8-10 years</option>
+                <option value="11-15 years" {% if profile.company_age == '11-15 years' %}selected{% endif %}>11-15 years</option>
+                <option value="16-20 years" {% if profile.company_age == '16-20 years' %}selected{% endif %}>16-20 years</option>
+                <option value="20+ years" {% if profile.company_age == '20+ years' %}selected{% endif %}>20+ years</option>
+            </select>
+
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" value="{{ profile.email }}" required>
+
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" value="{{ profile.phone }}" required>
+
+            <label for="industry">Type of Business</label>
+            <div class="checkbox-group">
+                <label><input type="checkbox" name="industry" value="Product" {% if 'Product' in profile.industry %}checked{% endif %}> Product</label>
+                <label><input type="checkbox" name="industry" value="Service" {% if 'Service' in profile.industry %}checked{% endif %}> Service</label>
+                <label><input type="checkbox" name="industry" value="Rental" {% if 'Rental' in profile.industry %}checked{% endif %}> Rental</label>
+                <label><input type="checkbox" name="industry" value="Subscription" {% if 'Subscription' in profile.industry %}checked{% endif %}> Subscription</label>
+                <label><input type="checkbox" name="industry" value="Other" {% if 'Other' in profile.industry %}checked{% endif %}> Other</label>
+            </div>
+
+            <label for="description">Business Description</label>
+            <textarea id="description" name="description" rows="4" placeholder="Describe your business...">{{ profile.description }}</textarea>
+
+            <label for="goals">Business Goals (Select all that apply)</label>
+            <div class="checkbox-group">
+                <label><input type="checkbox" name="goals" value="Increase revenue" {% if 'Increase revenue' in profile.goals %}checked{% endif %}> Increase revenue</label>
+                <label><input type="checkbox" name="goals" value="Expand market share" {% if 'Expand market share' in profile.goals %}checked{% endif %}> Expand market share</label>
+                <label><input type="checkbox" name="goals" value="Reduce costs" {% if 'Reduce costs' in profile.goals %}checked{% endif %}> Reduce costs</label>
+                <label><input type="checkbox" name="goals" value="Improve customer satisfaction" {% if 'Improve customer satisfaction' in profile.goals %}checked{% endif %}> Improve customer satisfaction</label>
+                <label><input type="checkbox" name="goals" value="Enhance product quality" {% if 'Enhance product quality' in profile.goals %}checked{% endif %}> Enhance product quality</label>
+                <label><input type="checkbox" name="goals" value="Other" {% if 'Other' in profile.goals %}checked{% endif %}> Other</label>
+                <input type="text" name="goals_other" placeholder="Please specify" value="{{ profile.goals_other }}">
+            </div>
+
+            <label for="challenges">Business Challenges (Select all that apply)</label>
+            <div class="checkbox-group">
+                <label><input type="checkbox" name="challenges" value="Competition" {% if 'Competition' in profile.challenges %}checked{% endif %}> Competition</label>
+                <label><input type="checkbox" name="challenges" value="Economic conditions" {% if 'Economic conditions' in profile.challenges %}checked{% endif %}> Economic conditions</label>
+                <label><input type="checkbox" name="challenges" value="Regulations" {% if 'Regulations' in profile.challenges %}checked{% endif %}> Regulations</label>
+                <label><input type="checkbox" name="challenges" value="Technological changes" {% if 'Technological changes' in profile.challenges %}checked{% endif %}> Technological changes</label>
+                <label><input type="checkbox" name="challenges" value="Other" {% if 'Other' in profile.challenges %}checked{% endif %}> Other</label>
+                <input type="text" name="challenges_other" placeholder="Please specify" value="{{ profile.challenges_other }}">
+            </div>
+
+            <label for="employees">Number of Employees</label>
+            <select id="employees" name="employees" required>
+                <option value="" disabled>Select number of employees</option>
+                <option value="1-10" {% if profile.employees == '1-10' %}selected{% endif %}>1-10</option>
+                <option value="11-50" {% if profile.employees == '11-50' %}selected{% endif %}>11-50</option>
+                <option value="51-100" {% if profile.employees == '51-100' %}selected{% endif %}>51-100</option>
+                <option value="101-500" {% if profile.employees == '101-500' %}selected{% endif %}>101-500</option>
+                <option value="501-1000" {% if profile.employees == '501-1000' %}selected{% endif %}>501-1000</option>
+                <option value="1001+" {% if profile.employees == '1001+' %}selected{% endif %}>1001+</option>
+            </select>
+
+            <label for="revenue">Annual Revenue</label>
+            <select id="revenue" name="revenue" required>
+                <option value="" disabled>Select annual revenue</option>
+                <option value="Under $50,000" {% if profile.revenue == 'Under $50,000' %}selected{% endif %}>Under $50,000</option>
+                <option value="$50,000 - $100,000" {% if profile.revenue == '$50,000 - $100,000' %}selected{% endif %}>$50,000 - $100,000</option>
+                <option value="$100,000 - $500,000" {% if profile.revenue == '$100,000 - $500,000' %}selected{% endif %}>$100,000 - $500,000</option>
+                <option value="$500,000 - $1M" {% if profile.revenue == '$500,000 - $1M' %}selected{% endif %}>$500,000 - $1M</option>
+                <option value="$1M - $5M" {% if profile.revenue == '$1M - $5M' %}selected{% endif %}>$1M - $5M</option>
+                <option value="$5M+" {% if profile.revenue == '$5M+' %}selected{% endif %}>$5M+</option>
+            </select>
+
+            <label for="target_market">Target Market</label>
+            <input type="text" id="target_market" name="target_market" value="{{ profile.target_market }}" required>
+
+            <label for="marketing_channels">Marketing Channels (Select all that apply)</label>
+            <div class="checkbox-group">
+                <label><input type="checkbox" name="marketing_channels" value="Social media" {% if 'Social media' in profile.marketing_channels %}checked{% endif %}> Social media</label>
+                <label><input type="checkbox" name="marketing_channels" value="Email marketing" {% if 'Email marketing' in profile.marketing_channels %}checked{% endif %}> Email marketing</label>
+                <label><input type="checkbox" name="marketing_channels" value="SEO" {% if 'SEO' in profile.marketing_channels %}checked{% endif %}> SEO</label>
+                <label><input type="checkbox" name="marketing_channels" value="Paid advertising" {% if 'Paid advertising' in profile.marketing_channels %}checked{% endif %}> Paid advertising</label>
+                <label><input type="checkbox" name="marketing_channels" value="Other" {% if 'Other' in profile.marketing_channels %}checked{% endif %}> Other</label>
+                <input type="text" name="marketing_channels_other" placeholder="Please specify" value="{{ profile.marketing_channels_other }}">
+            </div>
+
+            <label for="technology_stack">Technology Stack</label>
+            <input type="text" id="technology_stack" name="technology_stack" value="{{ profile.technology_stack }}" required>
+
+            <label for="kpis">Key Performance Indicators (KPIs) (Select all that apply and specify percentage)</label>
+            <div class="kpi-group">
+                <div class="kpi-item">
+                    <label><input type="checkbox" name="kpis" value="Customer Acquisition Cost (CAC)" {% if 'Customer Acquisition Cost (CAC)' in profile.kpis %}checked{% endif %}> Customer Acquisition Cost (CAC)</label>
+                    <input type="number" name="kpi_values[CAC]" value="{{ profile.kpi_values['CAC'] }}" min="0" max="100" placeholder="%" step="0.01">
+                </div>
+                <div class="kpi-item">
+                    <label><input type="checkbox" name="kpis" value="Customer Lifetime Value (CLTV)" {% if 'Customer Lifetime Value (CLTV)' in profile.kpis %}checked{% endif %}> Customer Lifetime Value (CLTV)</label>
+                    <input type="number" name="kpi_values[CLTV]" value="{{ profile.kpi_values['CLTV'] }}" min="0" max="100" placeholder="%" step="0.01">
+                </div>
+                <div class="kpi-item">
+                    <label><input type="checkbox" name="kpis" value="Revenue Growth Rate" {% if 'Revenue Growth Rate' in profile.kpis %}checked{% endif %}> Revenue Growth Rate</label>
+                    <input type="number" name="kpi_values[Revenue Growth Rate]" value="{{ profile.kpi_values['Revenue Growth Rate'] }}" min="0" max="100" placeholder="%" step="0.01">
+                </div>
+                <div class="kpi-item">
+                    <label><input type="checkbox" name="kpis" value="Net Promoter Score (NPS)" {% if 'Net Promoter Score (NPS)' in profile.kpis %}checked{% endif %}> Net Promoter Score (NPS)</label>
+                    <input type="number" name="kpi_values[NPS]" value="{{ profile.kpi_values['NPS'] }}" min="0" max="100" placeholder="%" step="0.01">
+                </div>
+                <div class="kpi-item">
+                    <label><input type="checkbox" name="kpis" value="Gross Margin" {% if 'Gross Margin' in profile.kpis %}checked{% endif %}> Gross Margin</label>
+                    <input type="number" name="kpi_values[Gross Margin]" value="{{ profile.kpi_values['Gross Margin'] }}" min="0" max="100" placeholder="%" step="0.01">
+                </div>
+                <div class="kpi-item">
+                    <label><input type="checkbox" name="kpis" value="Conversion Rate" {% if 'Conversion Rate' in profile.kpis %}checked{% endif %}> Conversion Rate</label>
+                    <input type="number" name="kpi_values[Conversion Rate]" value="{{ profile.kpi_values['Conversion Rate'] }}" min="0" max="100" placeholder="%" step="0.01">
+                </div>
+            </div>
+
+            <label for="contact">Preferred Contact Method</label>
+            <select id="contact" name="contact" required>
+                <option value="email" {% if profile.contact == 'email' %}selected{% endif %}>Email</option>
+                <option value="phone" {% if profile.contact == 'phone' %}selected{% endif %}>Phone</option>
+            </select>
+        
+            <button type="submit">Save Changes</button>
+        </form>
+    </div>
+</body>
+</html>
+
+

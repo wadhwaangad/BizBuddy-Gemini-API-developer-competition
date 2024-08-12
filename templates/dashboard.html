@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BizBuddy Dashboard</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <style>
+        body {
+            font-family: 'San Francisco', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #f7f9fc;
+        }
+        .dashboard {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #4facfe;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            z-index: 1001;
+        }
+        .sidebar img {
+            width: 150px;
+            margin-bottom: 20px;
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+            width: 100%;
+        }
+        .sidebar ul li {
+            width: 100%;
+        }
+        .sidebar ul li a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            text-decoration: none;
+            color: #fff;
+            width: 100%;
+            box-sizing: border-box;
+            transition: background-color 0.3s, transform 0.3s;
+            border: none;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .sidebar ul li a:hover {
+            background-color: #00c6ff;
+            transform: translateX(5px);
+        }
+        .sidebar ul li a img {
+            width: 20px;
+            margin-right: 10px;
+        }
+        .main-content {
+            flex-grow: 1;
+            position: relative;
+            overflow: hidden;
+            padding: 20px;
+            background-color: #f7f9fc;
+        }
+        .widget-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-items: flex-start;
+            padding: 20px;
+            gap: 20px;
+        }
+        .widget {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            margin: 10px;
+            padding: 20px;
+            width: 300px;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .widget-image {
+        width: 100%;
+        height: auto;
+        max-height: 180px;
+        object-fit: contain;
+        border-radius: 8px;
+        }
+
+        .widget:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+        }
+        .widget-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .widget-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #4facfe;
+        }
+        #tasks-list {
+            font-size: 16px;
+            color: #666;
+            text-align: left;
+            width: 100%;
+        }
+        .task-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f1f1f1;
+            border-radius: 8px;
+        }
+        .task-item p {
+            margin: 0;
+            font-size: 14px;
+        }
+        .task-item .task-title {
+            font-weight: bold;
+        }
+        .animation-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #fff;
+            z-index: 1000;
+            animation: fadeOut 1s forwards;
+            animation-delay: 4s;
+        }
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+        .animation-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .animation-content img {
+            width: 300px;
+            margin-bottom: 20px;
+            animation: rocketAnimation 4s forwards;
+        }
+        .animation-content p {
+            font-size: 36px;
+            margin: 10px 0 0;
+            background: -webkit-linear-gradient(left, #4facfe, #00f2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textDisappear 4s forwards;
+        }
+        @keyframes rocketAnimation {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(-50vh) scale(1.5);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) scale(2);
+                opacity: 0;
+            }
+        }
+        @keyframes textDisappear {
+            0%, 50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+        .loading-spinner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+        }
+        .loading-spinner::after {
+            content: '';
+            width: 40px;
+            height: 40px;
+            border: 5px solid #ccc;
+            border-top-color: #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        .no-data {
+            color: #6c757d;
+            font-size: 14px;
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="sidebar">
+            <img src="/static/images/landing.png" alt="BizBuddy">
+            <ul>
+                <li><a href="{{ url_for('saved_profile') }}"><img src="/static/images/profile-icon.png" alt="Profile">Profile</a></li>
+                <li><a href="{{ url_for('analytics') }}"><img src="/static/images/analytics-icon.png" alt="Analytics">Analytics</a></li>
+                <li><a href="{{ url_for('ask_gemini') }}"><img src="/static/images/gemini-icon.png" alt="Ask Gemini">Ask Gemini</a></li>
+                <li><a href="{{ url_for('calendar') }}"><img src="/static/images/calendar-icon.png" alt="Calendar">Calendar</a></li>               
+                <li><a href="{{ url_for('expense_tracker') }}"><img src="/static/images/expense-icon.png" alt="Expense Tracker">Expense Tracker</a></li>
+                <li><a href="{{ url_for('employees_func') }}"><img src="/static/images/employees-icon.png" alt="Employees">Employees</a></li>
+                <li><a href="{{ url_for('inventory') }}"><img src="/static/images/inventory-icon.png" alt="Inventory">Inventory</a></li>
+                <li><a href="{{ url_for('tips_of_the_day') }}"><img src="/static/images/tips-icon.png" alt="Tips of the Day">Tips of the Day</a></li>
+                <li><a href="{{ url_for('task_creation') }}"><img src="/static/images/task-icon.png" alt="Task Creation">Task Creation</a></li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <div class="animation-container">
+                <div class="animation-content">
+                    <img src="/static/images/dashboard.jpg" alt="BizBuddy Rocket">
+                    <p>Accelerate your business with BizBuddy</p>
+                </div>
+            </div>
+            <div class="widget-container">
+                <div class="widget" id="welcome1-widget">
+                    <div class="widget-title"></div>
+                    <img src="/static/images/welcome.PNG" alt="welcome-widget" class="widget-image">
+                </div>
+                <div class="widget" id="welcome-widget">
+                    <div class="widget-title"></div>
+                    <img src="/static/images/description.PNG" alt="welcome1-widget" class="widget-image">
+                </div>
+                <div class="widget" id="tasks-widget">
+                    <div class="widget-title">Upcoming Tasks</div>
+                    <div id="tasks-list" class="loading-spinner"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch('/dashboard_data')
+                .then(response => response.json())
+                .then(data => {
+                    renderTasksList(data.tasks);
+                })
+                .catch(error => {
+                    console.error("Error fetching dashboard data:", error);
+                    showErrorState();
+                });
+
+            function renderTasksList(tasks) {
+                const tasksListDiv = document.getElementById('tasks-list');
+                if (!tasks || tasks.length === 0) {
+                    tasksListDiv.innerHTML = '<div class="no-data">No tasks available</div>';
+                    return;
+                }
+                tasksListDiv.innerHTML = '';
+                tasks.forEach(task => {
+                    const taskItemDiv = document.createElement('div');
+                    taskItemDiv.classList.add('task-item');
+                    taskItemDiv.innerHTML = `
+                        <p class="task-title">${task.title}</p>
+                        <p class="assigned-to">${task.assigned_to}</p>
+                        <p class="due-date">Deadline: ${task.due_date}</p>
+                    `;
+                    tasksListDiv.appendChild(taskItemDiv);
+                });
+            }
+
+            function showErrorState() {
+                document.querySelectorAll('.loading-spinner').forEach(spinner => {
+                    spinner.innerHTML = '<div class="no-data">Error loading data</div>';
+                });
+            }
+        });
+    </script>
+</body>
+</html>

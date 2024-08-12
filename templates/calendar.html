@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Income and Expense Calendar</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css' rel='stylesheet' />
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css' rel='stylesheet'>
+    <style>
+        body {
+            background: linear-gradient(to right, #0072ff, #00c6ff);
+            color: white;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        #calendar {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            color: #333;
+            font-family: inherit;
+        }
+
+        .fc-toolbar-title {
+            font-size: 1.5em;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .fc-button-primary {
+            background-color: #4e54c8;
+            border-color: #4e54c8;
+            font-family: inherit;
+        }
+
+        .fc-button-primary:not(:disabled):active, 
+        .fc-button-primary:not(:disabled).fc-button-active {
+            background-color: #8f94fb;
+            border-color: #8f94fb;
+        }
+
+        .fc-daygrid-event {
+            cursor: pointer;
+            position: relative;
+        }
+
+        /* Tooltip styles */
+        .fc-daygrid-event:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .tooltip {
+            visibility: hidden;
+            background-color: black;
+            color: white;
+            text-align: center;
+            padding: 5px 10px;
+            border-radius: 5px;
+            position: absolute;
+            z-index: 1000;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 5px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0, 0, 0, 0.4); 
+            padding-top: 60px; 
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 10px;
+            font-family: inherit;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #4e54c8;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .back-link:hover {
+            background: #8f94fb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Income and Expense Calendar</h1>
+        <div id='calendar'></div>
+        <a href="{{ url_for('dashboard') }}" class="back-link">Back to Dashboard</a>
+    </div>
+
+    <!-- Modal for displaying transaction details -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Transaction Details</h2>
+            <p id="transaction-details"></p>
+        </div>
+    </div>
+
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js'></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const modal = document.getElementById("myModal");
+            const span = document.getElementsByClassName("close")[0];
+            const transactionDetails = document.getElementById("transaction-details");
+
+            fetch("{{ url_for('get_transactions') }}")
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Fetched transactions:', data); // Debugging line
+                    const calendarEl = document.getElementById('calendar');
+                    const calendar = new FullCalendar.Calendar(calendarEl, {
+                        initialView: 'dayGridMonth',
+                        headerToolbar: {
+                            left: 'prev,next today',
+                            center: 'title',
+                            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                        },
+                        events: data.map(transaction => ({
+                            title: transaction.type === 'income' ? `Income: $${transaction.amount.toFixed(2)}` : `Expense: $${transaction.amount.toFixed(2)}`,
+                            start: transaction.date,
+                            color: transaction.type === 'income' ? '#28a745' : '#dc3545',
+                            extendedProps: {
+                                details: transaction.category || 'No details available',
+                                amount: transaction.amount,
+                                type: transaction.type,
+                                date: transaction.date
+                            }
+                        })),
+                        eventMouseEnter: function(info) {
+                            const tooltip = document.createElement('div');
+                            tooltip.className = 'tooltip';
+                            tooltip.innerHTML = `Category: ${info.event.extendedProps.details}`;
+                            info.el.appendChild(tooltip);
+                        },
+                        eventMouseLeave: function(info) {
+                            const tooltip = info.el.querySelector('.tooltip');
+                            if (tooltip) {
+                                tooltip.remove();
+                            }
+                        }
+                    });
+                    calendar.render();
+                })
+                .catch(error => {
+                    console.error('Error fetching transactions:', error);
+                    transactionDetails.innerHTML = 'Failed to load transactions. Please try again later.';
+                    modal.style.display = "block";
+                });
+
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
+
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        });
+    </script>
+</body>
+</html>

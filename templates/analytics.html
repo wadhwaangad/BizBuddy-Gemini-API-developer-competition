@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #0072ff, #00c6ff);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        form {
+            display: inline-block;
+        }
+        input[type="file"], textarea {
+            margin-bottom: 20px;
+            padding: 10px;
+            background: white;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 20px;
+            background: #ffffff;
+            color: #0072ff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #0072ff;
+            color: white;
+        }
+        .back-button {
+            background-color: #ffffff;
+            color: #007BFF;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
+            margin-top: 10px;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+        .back-button:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Upload Excel File for Analysis</h1>
+        <form action="{{ url_for('upload_sheet') }}" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" accept=".xlsx, .xls" required>
+            <textarea name="description" rows="4" cols="50" placeholder="Enter description of the spreadsheet"></textarea>
+            <button type="submit">Upload</button>
+            <button id="backButton" type="button" class="back-button">← Back to Dashboard</button> <!-- Ensure it's a type="button" -->
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('backButton').addEventListener('click', function () {
+            window.location.href = '/dashboard'; // Replace with the correct route
+        });
+    </script>
+</body>
+</html>
