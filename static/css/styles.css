@@ -1,0 +1,207 @@
+/* Import San Francisco Font */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400&display=swap');
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'San Francisco', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+}
+
+.container {
+    text-align: center;
+}
+
+.responsive {
+    max-width: 50%; /* Make the image smaller */
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #007BFF;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+
+.gradient-text {
+    background: linear-gradient(90deg, #DA70D6, #7B68EE);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+    width: 100%; /* Ensure the text takes the full width of the container */
+    font-size: 1em; /* Make the text bigger */
+}
+
+.gemini-icon {
+    vertical-align: middle;
+    width: 15px; /* Make the star bigger */
+    height: 15px;
+    margin-left: 5px;
+    position: relative; /* Enable positioning */
+    top: -1px;
+}
+
+.login-message {
+    font-size: 1.5em; /* Make the login message bigger */
+    margin-bottom: 20px; /* Add space between the login message and the button */
+    background: linear-gradient(90deg, #DA70D6, #7B68EE);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.subtext {
+    font-family: -apple-system, BlinkMacSystemFont, 'San Francisco', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background: linear-gradient(90deg, #DA70D6, #7B68EE);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+    width: 100%;
+    font-size: 2em; /* Increase the font size */
+    margin-top: 20px;
+    margin-bottom: 20px;
+    color: #333; /* Adjust color if necessary */
+}
+
+@media (max-width: 600px) {
+    .subtext {
+        font-size: 1.5em; /* Slightly smaller on smaller screens */
+    }
+}
+
+
+.container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    width: 100%;
+}
+
+h2 {
+    text-align: center;
+    color: #007BFF;
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+}
+
+input, select, button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+select[multiple] {
+    height: auto;
+}
+body {
+    font-family: 'San Francisco', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    height: 100vh;
+}
+
+.dashboard {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.sidebar {
+    background: linear-gradient(45deg, #6a0dad, #c71585);
+    color: white;
+    width: 200px;
+    padding: 20px;
+}
+
+.sidebar h2 {
+    text-align: center;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin: 20px 0;
+}
+
+.sidebar ul li a {
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar ul li a img {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+.main-content {
+    flex-grow: 1;
+    background: #f5f5f5;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.content-section {
+    display: none;
+}
+
+.content-section:target {
+    display: block;
+}
+
+button {
+    background: #6a0dad;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+button:hover {
+    background: #c71585;
+}
