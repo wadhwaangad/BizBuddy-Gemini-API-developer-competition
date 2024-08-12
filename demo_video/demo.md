@@ -1,1 +1,2 @@
-This folder contains the demo video for BizBuddy.
+Watch the demo video at https://www.youtube.com/watch?v=NUzTLqy3njE&t=91s
+
