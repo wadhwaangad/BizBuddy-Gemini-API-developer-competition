@@ -1,2 +1,3 @@
-Watch the demo video at https://www.youtube.com/watch?v=NUzTLqy3njE&t=91s
+Watch the demo video at https://www.youtube.com/watch?v=NUzTLqy3njE
+
 
